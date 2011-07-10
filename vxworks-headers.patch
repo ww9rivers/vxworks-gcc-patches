@@ -21,7 +21,7 @@ diff -u -r a/taskLib.h b/taskLib.h
  #include <classLib.h>
  #include <qLib.h>
 -#include <regs.h>
-+#include "/usr/local/powerpc-wrs-vxworks/powerpc-wrs-vxworks/sys-include/regs.h"
++#include "PREFIX/powerpc-wrs-vxworks/sys-include/regs.h"
  #include <excLib.h>
  #include <private/eventP.h>
  #include <private/semLibP.h>

@@ -54,7 +54,7 @@ tar --gzip -xf "mpc-$MPC_VERSION.tar.gz"
 # Patch!
 echo "Patching..."
 cd "$SRC/gccdist/WindRiver/vxworks-6.3/target/h"
-sed "s:/usr/local/powerpc-wrs-vxworks:$(echo $PREFIX):" < "$PATCHROOT/vxworks-headers.patch" | patch -p1
+sed "s:PREFIX:$(echo $PREFIX):" < "$PATCHROOT/vxworks-headers.patch" | patch -p1
 cd "$SRC/gcc-$GCC_VERSION"
 patch -p2 < "$PATCHROOT/gcc-diff.patch" # -p2 intentional.
 
