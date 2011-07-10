@@ -1,25 +1,31 @@
 #!/bin/bash
 
+# BEGIN CONFIGURATION
 BINUTILS_VERSION=2.21
 GCC_VERSION=4.5.2
 MPFR_VERSION=3.0.1
 GMP_VERSION=5.0.2
 MPC_VERSION=0.8.2
-PATCHROOT="$HOME/src/FIRST/gcc-patches"
-PREFIX="$HOME/vxworks"
-SRC="$HOME/src/FIRST/gcc-src"
-BUILD="$HOME/src/FIRST/gcc-build"
 JOBS=4
-
-function download()
-{
-    [ -e "$SRC/$1" ] || wget -O "$SRC/$1" "$2"
-}
+# END CONFIGURATION
 
 function die()
 {
     echo "$1"
     exit 1
+}
+
+[ -e build.bash ] || die "Must cd into source directory"
+PATCHROOT="$(pwd)"
+
+[ $# -eq 3 ] || die "usage: build.bash PREFIX SRC BUILD"
+PREFIX="$1"
+SRC="$2"
+BUILD="$3"
+
+function download()
+{
+    [ -e "$SRC/$1" ] || wget -O "$SRC/$1" "$2"
 }
 
 export PATH="$PREFIX/bin:$PATH"
@@ -100,10 +106,8 @@ cd "$BUILD/gcc"
     --with-cpu-PPC603 \
     CFLAGS="-g -O2" \
 
-# TODO: Document if necessary
 make -j "$JOBS" || die "** gcc build failed"
 make -j "$JOBS" install || die "** gcc install failed"
-
 
 echo "libstdc++:"
 cd "$BUILD/libstdc++"
