@@ -1,13 +1,14 @@
 diff -u -r a/gcc-4.5.2/gcc/config/rs6000/vxworks.h b/gcc-4.5.2/gcc/config/rs6000/vxworks.h
 --- a/gcc-4.5.2/gcc/config/rs6000/vxworks.h	2009-10-10 11:43:31.000000000 -0700
 +++ b/gcc-4.5.2/gcc/config/rs6000/vxworks.h	2011-05-23 12:48:16.857388980 -0700
-@@ -34,6 +34,9 @@
+@@ -34,6 +34,10 @@
    do						\
      {						\
        builtin_define ("__ppc");			\
 +      builtin_define ("__ppc__");		\
 +      builtin_define ("__PPC__");		\
 +      builtin_define ("__PPC");		\
++      builtin_define ("_WRS_KERNEL");		\
        builtin_define ("__EABI__");		\
        builtin_define ("__ELF__");		\
        builtin_define ("__vxworks");		\
