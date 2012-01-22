@@ -13,18 +13,6 @@ diff -u -r a/ioLib.h b/ioLib.h
  extern int 	ioctl (int fd, int function, int arg);
  extern STATUS	close (int);
  extern STATUS	remove (const char *);
-diff -u -r a/taskLib.h b/taskLib.h
---- a/taskLib.h	2007-07-24 18:15:40.000000000 -0700
-+++ b/taskLib.h	2011-05-14 18:57:34.032617556 -0700
-@@ -210,7 +210,7 @@
- #include <vwModNum.h>
- #include <classLib.h>
- #include <qLib.h>
--#include <regs.h>
-+#include "PREFIX/powerpc-wrs-vxworks/sys-include/regs.h"
- #include <excLib.h>
- #include <private/eventP.h>
- #include <private/semLibP.h>
 diff -u -r a/tool/gnu/ldscripts/link.OUT b/tool/gnu/ldscripts/link.OUT
 --- a/tool/gnu/ldscripts/link.OUT	2007-07-24 18:15:42.000000000 -0700
 +++ b/tool/gnu/ldscripts/link.OUT	2011-05-14 19:10:10.396484862 -0700
