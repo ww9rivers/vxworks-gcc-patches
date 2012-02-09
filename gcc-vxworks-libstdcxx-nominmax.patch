@@ -1,0 +1,11 @@
+--- a/libstdc++-v3/config/os/vxworks/os_defines.h	2012-02-09 06:43:46.099226630 -0500
++++ b/libstdc++-v3/config/os/vxworks/os_defines.h	2012-02-09 06:41:19.068064773 -0500
+@@ -33,4 +33,8 @@
+ // System-specific #define, typedefs, corrections, etc, go here.  This
+ // file will come before all others.
+ 
++// Don't let vxworks system headers define min and max as macros
++#undef NOMINMAX
++#define NOMINMAX 1
++
+ #endif

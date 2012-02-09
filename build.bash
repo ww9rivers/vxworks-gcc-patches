@@ -82,26 +82,24 @@ run () {
 }
 
 extract () {
-	PD=$1
+	local PD="$1"
+	local PF="$DIST/$PD"
 	echo -n "ex $PD "
-	(
-	cd "$SRC"
 	case "$PD" in
 	*.tar.bz2)
-		tar -jxf "$PD"
+		tar -jxf "$PF" -C "$SRC"
 		;;
 	*.tar.gz)
-		tar -zxf "$PD"
+		tar -zxf "$PF" -C "$SRC"
 		;;
 	*.zip)
-		unzip -qo "$PD"
+		unzip -qo "$PF" -d "$SRC"
 		;;
 	*)
-		die "Don't know how to extract $PD"
+		die "Don't know how to extract $PF"
 		;;
 	esac
 	[ $? -eq 0 ] || die "Could not extract \"$1\""
-	) || exit $?
 	echo "[ok]"
 }
 
@@ -115,7 +113,7 @@ download()
 	dln="$(basename "$2")"
 	(
 	echo -n "dl $2 -> $1 "
-	cd "$SRC"
+	cd "$DIST"
 	{
 		[ -e "$dln" ] || wget -c "$2" || exit $?
 		if [ "$dln" != "$1" ]; then
@@ -129,17 +127,19 @@ download()
 [ -e build.bash ] || cd $(dirname $0)
 [ -e build.bash ] || die "Current working directory must be source directory"
 
-[ $# -eq 3 ] || [ $# -eq 4 ] || die "usage: build.bash PREFIX SRC BUILD [SKIPS]"
+[ $# -eq 4 ] || [ $# -eq 5 ] || die "usage: build.bash PREFIX DIST SRC BUILD [SKIPS]"
 PREFIX="$(realpath -m "$1")" # need an absolute here.
-SRC="$2"
-BUILD="$3"
-SKIP="${4:-}"
+DIST="$2"
+SRC="$3"
+BUILD="$4"
+SKIP="${5:-}"
 
 # Must be absolute path as it is used in "conf", where we change directory.
 export WIND_BASE=$(realpath -m "$SRC/gccdist/WindRiver/vxworks-6.3")
 
 export PATH="$(realpath -m "$PREFIX/bin"):$PATH"
 
+[ -d "$DIST"   ] || mkdir "$DIST"   || exit
 [ -d "$SRC"    ] || mkdir "$SRC"    || exit
 [ -d "$PREFIX" ] || mkdir "$PREFIX" || exit
 [ -d "$BUILD"  ] || mkdir "$BUILD"  || exit
@@ -181,29 +181,20 @@ do_binutils () {
 	conf binutils
 	make_or_die binutils
 }
-
 run binutils
-
-#install_wrs_headers ()
-#{
-#	sed "s:PREFIX:$PREFIX:" < "vxworks-headers.patch" | patch -d "$SRC/gccdist/WindRiver/vxworks-6.3/target/h" -p1
-#
-#	mkdir -p "$WIND_BASE/target" || exit
-#	ln -fs "$PREFIX/powerpc-wrs-vxworks/sys-include" "$WIND_BASE/target/h" || exit
-#	cp -R  "$SRC/gccdist/WindRiver/vxworks-6.3/host" "$WIND_BASE/host" || exit # must be a copy, because build adds more.
-#}
 
 do_wrs_headers () {
 	download "gccdist.zip" \
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
-#	install_wrs_headers
 }
 run wrs_headers
 
 prep_gcc ()
 {
 	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < "gcc.patch" || exit 1
+	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < "gcc-4.6.2-vxworks-libstdcxx.patch" || exit 1
+	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
 	( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
 }
 
@@ -226,7 +217,9 @@ conf_gcc ()
 	    --disable-nls \
 	    --disable-libmudflap \
 	    --with-cpu-PPC603 \
-	    CFLAGS="-g -O2"
+	CFLAGS="-g -O2 -DNOMINMAX" \
+	CXXFLAGS="-g -O2 -DNOMINMAX" \
+	CPPFLAGS="-DNOMINMAX"
 }
 
 do_gcc () {

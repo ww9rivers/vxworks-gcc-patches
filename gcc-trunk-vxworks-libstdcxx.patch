@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index 9136c24..9271ea1 100755
+--- a/configure
++++ b/configure
+@@ -3104,7 +3104,7 @@ esac
+ case "${target}" in
+   *-*-vxworks*)
+     # VxWorks uses the Dinkumware C++ library.
+-    noconfigdirs="$noconfigdirs target-libstdc++-v3"
++    #noconfigdirs="$noconfigdirs target-libstdc++-v3"
+     ;;
+   arm*-wince-pe*)
+     # the C++ libraries don't build on top of CE's C libraries
