@@ -10,7 +10,7 @@ JOBS=4
 # END CONFIGURATION
 
 die() {
-    echo "$1"
+    echo "$@"
     exit 1
 }
 
@@ -196,7 +196,7 @@ prep_gcc ()
 	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < "gcc.patch" || exit 1
 	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < "gcc-4.6.2-vxworks-libstdcxx.patch" || exit 1
 	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
-	( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
+	#( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
 }
 
 conf_gcc ()
@@ -223,17 +223,21 @@ conf_gcc ()
 do_gcc () {
 	download "gcc-$GCC_VERSION.tar.bz2" \
 		"http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VERSION/gcc-$GCC_VERSION.tar.bz2"
-	#download "mpfr-$MPFR_VERSION.tar.bz2" \
-	#	"http://www.mpfr.org/mpfr-current/mpfr-$MPFR_VERSION.tar.bz2"
-	#download "gmp-$GMP_VERSION.tar.bz2" \
-	#	"ftp://ftp.gmplib.org/pub/gmp-$GMP_VERSION/gmp-$GMP_VERSION.tar.bz2"
-	#download "mpc-$MPC_VERSION.tar.gz" \
-	#	"http://www.multiprecision.org/mpc/download/mpc-$MPC_VERSION.tar.gz"
-	#extract "mpfr-$MPFR_VERSION.tar.bz2"
-	#extract "gmp-$GMP_VERSION.tar.bz2"
-	#extract "mpc-$MPC_VERSION.tar.gz"
-
+	download "mpfr-$MPFR_VERSION.tar.bz2" \
+		"http://www.mpfr.org/mpfr-current/mpfr-$MPFR_VERSION.tar.bz2"
+	download "gmp-$GMP_VERSION.tar.bz2" \
+		"ftp://ftp.gmplib.org/pub/gmp-$GMP_VERSION/gmp-$GMP_VERSION.tar.bz2"
+	download "mpc-$MPC_VERSION.tar.gz" \
+		"http://www.multiprecision.org/mpc/download/mpc-$MPC_VERSION.tar.gz"
+	extract "mpfr-$MPFR_VERSION.tar.bz2"
+	extract "gmp-$GMP_VERSION.tar.bz2"
+	extract "mpc-$MPC_VERSION.tar.gz"
 	extract "gcc-$GCC_VERSION.tar.bz2"
+
+	ln -s "$SRC/mpfr-$MPFR_VERSION" "$SRC/gcc-$GCC_VERSION/mpfr"
+	ln -s "$SRC/gmp-$GMP_VERSION"   "$SRC/gcc-$GCC_VERSION/gmp"
+	ln -s "$SRC/mpc-$MPC_VERSION"   "$SRC/gcc-$GCC_VERSION/mpc"
+
 	prep_gcc
 	conf gcc
 	make_or_die gcc
