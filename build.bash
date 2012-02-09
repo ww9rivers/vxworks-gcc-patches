@@ -143,7 +143,7 @@ export PATH="$(realpath -m "$PREFIX/bin"):$PATH"
 [ -d "$SRC"    ] || mkdir "$SRC"    || exit
 [ -d "$PREFIX" ] || mkdir "$PREFIX" || exit
 [ -d "$BUILD"  ] || mkdir "$BUILD"  || exit
-for d in binutils gcc libstdc++; do
+for d in gccdist binutils gcc libstdc++; do
 	if ! skip_has "$d"; then
 		df="$BUILD/$d"
 		[ -d "$df" ] && rm -rf "$df"
@@ -187,6 +187,7 @@ do_wrs_headers () {
 	download "gccdist.zip" \
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
+	patch -d "$SRC/gccdist" -p1 <  wrs_headers-vxTypesOld.patch || exit
 }
 run wrs_headers
 
@@ -216,10 +217,7 @@ conf_gcc ()
 	    --disable-libgomp \
 	    --disable-nls \
 	    --disable-libmudflap \
-	    --with-cpu-PPC603 \
-	CFLAGS="-g -O2 -DNOMINMAX" \
-	CXXFLAGS="-g -O2 -DNOMINMAX" \
-	CPPFLAGS="-DNOMINMAX"
+	    --with-cpu-PPC603
 }
 
 do_gcc () {
