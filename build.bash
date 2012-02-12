@@ -187,7 +187,7 @@ do_wrs_headers () {
 	download "gccdist.zip" \
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
-	patch -d "$SRC/gccdist" -p1 <  wrs_headers-vxTypesOld.patch || exit
+	patch -d "$SRC/gccdist" -p1 <  wrs_headers-vxtypes.patch || exit
 }
 run wrs_headers
 
