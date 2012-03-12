@@ -2,7 +2,7 @@
 
 # BEGIN CONFIGURATION
 BINUTILS_VERSION=2.22
-GCC_VERSION=4.6.2
+GCC_VERSION=4.6.3
 MPFR_VERSION=3.1.0
 GMP_VERSION=5.0.2
 MPC_VERSION=0.9
@@ -130,7 +130,7 @@ download()
 [ $# -eq 4 ] || [ $# -eq 5 ] || die "usage: build.bash PREFIX DIST SRC BUILD [SKIPS]"
 PREFIX="$(realpath -m "$1")" # need an absolute here.
 DIST="$2"
-SRC="$3"
+SRC="$(realpath -m "$3")"
 BUILD="$4"
 SKIP="${5:-}"
 
@@ -168,7 +168,7 @@ conf ()
 
 conf_binutils ()
 {
-	"../../$SRC/binutils-$BINUTILS_VERSION/configure" \
+	"$SRC/binutils-$BINUTILS_VERSION/configure" \
 		--prefix="$PREFIX" \
 		--target=powerpc-wrs-vxworks \
 		--disable-nls
@@ -201,7 +201,7 @@ prep_gcc ()
 
 conf_gcc ()
 {
-	"../../$SRC/gcc-$GCC_VERSION/configure" \
+	"$SRC/gcc-$GCC_VERSION/configure" \
 	    --prefix="$PREFIX" \
 	    --target=powerpc-wrs-vxworks \
 	    --with-gnu-as \
