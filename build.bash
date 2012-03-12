@@ -7,6 +7,10 @@ MPFR_VERSION=3.1.0
 GMP_VERSION=5.0.2
 MPC_VERSION=0.9
 JOBS=4
+
+export CFLAGS="-O2 -ggdb"
+export CXXFLAGS="-O2 -ggdb"
+
 # END CONFIGURATION
 
 die() {
@@ -188,6 +192,7 @@ do_wrs_headers () {
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
 	patch -d "$SRC/gccdist" -p1 <  wrs_headers-vxtypes.patch || exit
+	#patch -d "$SRC/gccdist" -p1 <  wrs_headers-stdint.patch || exit
 }
 run wrs_headers
 
@@ -196,6 +201,7 @@ prep_gcc ()
 	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < "gcc.patch" || exit 1
 	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < "gcc-4.6.2-vxworks-libstdcxx.patch" || exit 1
 	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
+	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-4.6.3-libstdcxx-stdint.patch || exit 1
 	#( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
 }
 

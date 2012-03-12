@@ -1,0 +1,8 @@
+diff -durpN gccdist.orig/WindRiver/vxworks-6.3/target/h/stdint.h gccdist/WindRiver/vxworks-6.3/target/h/stdint.h
+--- gccdist.orig/WindRiver/vxworks-6.3/target/h/stdint.h	2012-03-12 15:20:03.068321433 -0500
++++ gccdist/WindRiver/vxworks-6.3/target/h/stdint.h	1969-12-31 19:00:00.000000000 -0500
+@@ -1,4 +0,0 @@
+-#include <types/vxTypes.h>
+-
+-typedef int intptr_t;
+-typedef unsigned long uintptr_t;
