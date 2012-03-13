@@ -1,0 +1,16 @@
+diff -durp gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h
+--- gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-12 21:52:21.224054042 -0500
++++ gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-12 21:57:02.392539149 -0500
+@@ -391,8 +391,9 @@ extern char *	getwd (char * pathname);
+ extern int	open (const char *, int, int);
+ extern int	creat (const char *, int);
+ extern int	read (int, char *, size_t);
+-extern int	write (int, char *, size_t);
+-extern int 	ioctl (int fd, int function, int arg);
++extern int	write (int, const char *, size_t);
++//extern int 	ioctl (int fd, int function, int arg);
++extern int 	ioctl (int fd, int function, ...);
+ extern STATUS	close (int);
+ extern STATUS	remove (const char *);
+ extern BOOL	isatty (int fd);
+Only in gccdist/WindRiver/vxworks-6.3/target/h: ioLib.h~

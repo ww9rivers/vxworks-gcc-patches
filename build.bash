@@ -193,6 +193,9 @@ do_wrs_headers () {
 	extract gccdist.zip
 	patch -d "$SRC/gccdist" -p1 <  wrs_headers-vxtypes.patch || exit
 	#patch -d "$SRC/gccdist" -p1 <  wrs_headers-stdint.patch || exit
+	patch -d "$SRC/gccdist" -p1 < wrs_headers-unistd.patch || exit
+	patch -d "$SRC/gccdist" -p1 < wrs_headers-ioLib.patch  || exit
+	patch -d "$SRC/gccdist" -p1 < wrs_headers-ioLib-protos.patch  || exit
 }
 run wrs_headers
 
@@ -250,22 +253,3 @@ do_gcc () {
 }
 run gcc
 
-conf_libstdcxx ()
-{
-	CPPFLAGS="-DNOMINMAX" CFLAGS="-DNOMINMAX" CXXFLAGS="-DNOMINMAX" \
-		"../../$SRC/gcc-$GCC_VERSION/libstdc++-v3/configure" \
-		--host=powerpc-wrs-vxworks \
-		--prefix="$PREFIX" \
-		--enable-libstdcxx-debug \
-
-	#	CFLAGS="-g -isystem $PREFIX/powerpc-wrs-vxworks/sys-include/ -isystem $PREFIX/powerpc-wrs-vxworks/sys-include/wrn/coreip/ -D_WRS_KERNEL -DCPU=PPC603 -DNOMINMAX" \
-	#	CXXFLAGS="-isystem $PREFIX/powerpc-wrs-vxworks/sys-include/ -isystem $PREFIX/powerpc-wrs-vxworks/sys-include/wrn/coreip/ -D_WRS_KERNEL -DCPU=PPC603 -DNOMINMAX" \
-	#	CPPFLAGS="-g -isystem $PREFIX/powerpc-wrs-vxworks/sys-include/ -isystem $PREFIX/powerpc-wrs-vxworks/sys-include/wrn/coreip/ -D_WRS_KERNEL -DCPU=PPC603 -DNOMINMAX"
-}
-
-do_libstdcxx () {
-	conf libstdc++
-	make_or_die libstdc++
-}
-
-run libstdcxx

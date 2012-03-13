@@ -1,0 +1,12 @@
+Only in gccdist.orig/WindRiver/vxworks-6.3/target/h: cscope.out
+diff -durp gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h
+--- gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-12 20:57:48.458969236 -0500
++++ gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-12 21:31:45.834498564 -0500
+@@ -136,7 +136,6 @@ extern "C" {
+ 
+ #include <vwModNum.h>
+ #include <limits.h>
+-#include <net/uio.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <dllLib.h>
