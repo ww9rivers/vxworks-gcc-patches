@@ -1,0 +1,29 @@
+--- /cross/gccdist/WindRiver/vxworks-6.3/target/h/types/vxTypes.h	2012-03-13 11:10:12.311262015 -0400
++++ /usr/local/powerpc-wrs-vxworks/wind_base/target/h/types/vxTypes.h	2012-03-13 11:08:10.471258259 -0400
+@@ -234,6 +234,26 @@ _TYPE_quad_t;
+ #undef _TYPE_quad_t
+ #endif
+ 
++/* int_leastN_t and int_fastN_t */
++
++typedef int8_t int_least8_t;
++typedef int16_t int_least16_t;
++typedef int32_t int_least32_t;
++typedef int64_t int_least64_t;
++typedef uint8_t uint_least8_t;
++typedef uint16_t uint_least16_t;
++typedef uint32_t uint_least32_t;
++typedef uint64_t uint_least64_t;
++
++typedef int8_t int_fast8_t;
++typedef int16_t int_fast16_t;
++typedef int32_t int_fast32_t;
++typedef int64_t int_fast64_t;
++typedef uint8_t uint_fast8_t;
++typedef uint16_t uint_fast16_t;
++typedef uint32_t uint_fast32_t;
++typedef uint64_t uint_fast64_t;
++
+ 
+ /* old Berkeley definitions */
+ 
