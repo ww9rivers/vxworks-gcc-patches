@@ -160,13 +160,14 @@ for d in gccdist binutils gcc libstdc++; do
 	fi
 done
 
+rm -rf "$PREFIX"
+
 conf ()
 {
 	PN="$1"
-	SAFE_PN="${1//+/x}"
 	(
 	echo "$BUILD/$PN"
-	cd "$BUILD/$PN" && eval "conf_$SAFE_PN"
+	cd "$BUILD/$PN" && eval "conf_$PN"
 	) || die "conf of $PN failed"
 }
 
@@ -192,7 +193,6 @@ do_wrs_headers () {
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
 	patch -d "$SRC/gccdist" -p1 <  wrs_headers-vxtypes.patch || exit
-	#patch -d "$SRC/gccdist" -p1 <  wrs_headers-stdint.patch || exit
 	patch -d "$SRC/gccdist" -p1 < wrs_headers-unistd.patch || exit
 	patch -d "$SRC/gccdist" -p1 < wrs_headers-ioLib.patch  || exit
 	patch -d "$SRC/gccdist" -p1 < wrs_headers-ioLib-protos.patch  || exit
