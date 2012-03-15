@@ -1,6 +1,6 @@
-diff -durp gccdist.orig/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h gccdist/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h
---- gccdist.orig/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h	2007-07-24 18:15:46.000000000 -0400
-+++ gccdist/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h	2012-03-13 11:39:30.263316216 -0400
+diff -durpN -x '*~' gccdist.orig/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h gccdist/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h
+--- gccdist.orig/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h	2012-03-14 23:18:34.975643172 -0500
++++ gccdist/WindRiver/vxworks-6.3/target/h/wrn/coreip/net/uio.h	2012-03-14 23:23:12.590624440 -0500
 @@ -82,7 +82,7 @@ struct iovec {
  #define UIO_SMALLIOV	8		/* 8 on stack, else malloc */
  

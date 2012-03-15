@@ -195,7 +195,8 @@ do_wrs_headers () {
 	patch -d "$SRC/gccdist" -p1 < wrs_headers-regsPpc.patch || exit
 	patch -d "$SRC/gccdist" -p1 < wrs_headers-unistd.patch || exit
 	patch -d "$SRC/gccdist" -p1 < wrs_headers-ioLib.patch  || exit
-	patch -d "$SRC/gccdist" -p1 < wrs_headers-ioLib-protos.patch  || exit
+	patch -d "$SRC/gccdist" -p1 < wrs_headers-uio.patch  || exit
+	patch -d "$SRC/gccdist" -p1 < wrs_headers-cdefs.patch  || exit
 }
 run wrs_headers
 
