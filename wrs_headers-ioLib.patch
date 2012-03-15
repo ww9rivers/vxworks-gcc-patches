@@ -1,12 +1,28 @@
-Only in gccdist.orig/WindRiver/vxworks-6.3/target/h: cscope.out
 diff -durp gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h
 --- gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-12 20:57:48.458969236 -0500
 +++ gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-12 21:31:45.834498564 -0500
-@@ -136,7 +136,6 @@ extern "C" {
+@@ -136,7 +136,7 @@ extern "C" {
  
  #include <vwModNum.h>
  #include <limits.h>
 -#include <net/uio.h>
++#include <wrn/coreip/net/uio.h>
  #include <fcntl.h>
  #include <unistd.h>
  #include <dllLib.h>
+@@ -391,8 +391,12 @@ extern char *	getwd (char * pathname);
+ extern int	open (const char *, int, int);
+ extern int	creat (const char *, int);
+ extern int	read (int, char *, size_t);
++#ifdef __cplusplus
+-extern int	write (int, char *, size_t);
+-extern int 	ioctl (int fd, int function, int arg);
++extern int	write (int, const char *, size_t);
++#else
++extern int	write (int, char *, size_t);
++#endif
++extern int 	ioctl (int fd, int function, int arg);
+ extern STATUS	close (int);
+ extern STATUS	remove (const char *);
+ extern BOOL	isatty (int fd);
+

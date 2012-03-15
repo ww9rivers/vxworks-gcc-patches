@@ -9,3 +9,4 @@ diff -durpN gccdist.orig/WindRiver/vxworks-6.3/target/h/unistd.h gccdist/WindRiv
  
  #ifndef SEEK_SET
  #define SEEK_SET           0       /* absolute offset, was L_SET */
+

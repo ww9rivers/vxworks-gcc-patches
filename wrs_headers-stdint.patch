@@ -1,0 +1,13 @@
+--- gccdist.orig/WindRiver/vxworks-6.3/target/h/stdint.h	2007-07-24 18:15:40.000000000 -0400
++++ gccdist/WindRiver/vxworks-6.3/target/h/stdint.h	2012-03-13 11:14:13.659269457 -0400
+@@ -1,4 +1,8 @@
+ #include <types/vxTypes.h>
+ 
+-typedef int intptr_t;
+-typedef unsigned long uintptr_t;
++typedef int32_t intptr_t;
++typedef uint32_t uintptr_t;
++
++typedef int64_t intmax_t;
++typedef uint32_t uintmax_t;
++
