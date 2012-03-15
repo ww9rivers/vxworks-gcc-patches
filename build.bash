@@ -192,20 +192,19 @@ do_wrs_headers () {
 	download "gccdist.zip" \
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
-	patch -d "$SRC/gccdist" -p1 < wrs_headers-regsPpc.patch || exit
-	patch -d "$SRC/gccdist" -p1 < wrs_headers-unistd.patch || exit
-	patch -d "$SRC/gccdist" -p1 < wrs_headers-ioLib.patch  || exit
-	patch -d "$SRC/gccdist" -p1 < wrs_headers-uio.patch  || exit
-	patch -d "$SRC/gccdist" -p1 < wrs_headers-cdefs.patch  || exit
+	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-regsPpc.patch || exit
+	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-unistd.patch || exit
+	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-ioLib.patch  || exit
+	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-uio.patch  || exit
+	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-cdefs.patch  || exit
 }
 run wrs_headers
 
 prep_gcc ()
 {
-	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc.patch || exit 1
-	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-4.6.2-vxworks-libstdcxx.patch || exit 1
-	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
-	patch -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-4.6.3-libstdcxx-stdint.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-4.6.2-vxworks-libstdcxx.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
 	#( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
 }
 
