@@ -1,13 +1,13 @@
-diff -durp gccdist.orig/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h gccdist/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h
---- gccdist.orig/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h	2012-02-12 00:35:27.613086396 -0500
-+++ gccdist/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h	2012-02-12 00:42:50.954543864 -0500
-@@ -20,6 +20,9 @@ xxxxxxxxxxx,yao  written.
- #ifndef __INCregsPpch
- #define __INCregsPpch
- 
-+/* Need Obsolete Types */
-+#include "types.h"
-+
- #ifdef __cplusplus
+diff -durp -x '*~' -x '*.rej' gccdist.orig/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h gccdist/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h
+--- gccdist.orig/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h	2012-03-14 22:08:20.217927604 -0500
++++ gccdist/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h	2012-03-14 22:09:21.276923474 -0500
+@@ -24,6 +24,9 @@ xxxxxxxxxxx,yao  written.
  extern "C" {
  #endif
+ 
++/* Need obsolete types */
++#include "types.h"
++
+ #define GREG_NUM	32	/* has 32 32/64-bit data registers */
+ 
+ #ifndef	_ASMLANGUAGE
