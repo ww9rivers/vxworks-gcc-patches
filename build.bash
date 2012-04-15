@@ -195,8 +195,6 @@ do_wrs_headers () {
 	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-regsPpc.patch || exit
 	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-unistd.patch || exit
 	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-ioLib.patch  || exit
-	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-uio.patch  || exit
-	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-cdefs.patch  || exit
 }
 run wrs_headers
 
@@ -216,6 +214,7 @@ conf_gcc ()
 	    --with-gnu-as \
 	    --with-gnu-ld \
 	    --with-headers="$WIND_BASE/target/h" \
+            --with-headers="$WIND_BASE/target/h/wrn/coreip" \
 	    --disable-shared \
 	    --disable-libssp \
 	    --disable-multilib \

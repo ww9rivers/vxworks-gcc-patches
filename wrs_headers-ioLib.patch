@@ -1,15 +1,6 @@
 diff -durp -x '*~' -x '*.rej' -x regsPpc.h -x '*.orig' gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h
 --- gccdist.orig/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-14 22:46:43.283772182 -0500
 +++ gccdist/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-03-14 22:47:43.983768086 -0500
-@@ -136,7 +136,7 @@ extern "C" {
- 
- #include <vwModNum.h>
- #include <limits.h>
--#include <net/uio.h>
-+#include <wrn/coreip/net/uio.h>
- #include <fcntl.h>
- #include <unistd.h>
- #include <dllLib.h>
 @@ -392,8 +392,8 @@ extern char *	getwd (char * pathname);
  extern int	open (const char *, int, int);
  extern int	creat (const char *, int);
