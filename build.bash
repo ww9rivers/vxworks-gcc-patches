@@ -2,9 +2,9 @@
 
 # BEGIN CONFIGURATION
 BINUTILS_VERSION=2.22
-GCC_VERSION=4.6.3
+GCC_VERSION=4.7.0
 MPFR_VERSION=3.1.0
-GMP_VERSION=5.0.2
+GMP_VERSION=5.0.4
 MPC_VERSION=0.9
 JOBS=4
 
@@ -132,16 +132,16 @@ download()
 [ -e build.bash ] || die "Current working directory must be source directory"
 
 [ $# -eq 4 ] || [ $# -eq 5 ] || die "usage: build.bash PREFIX DIST SRC BUILD [SKIPS]"
-PREFIX="$(realpath -m "$1")" # need an absolute here.
+PREFIX="$(realpath "$1")" # need an absolute here.
 DIST="$2"
-SRC="$(realpath -m "$3")"
+SRC="$(realpath "$3")"
 BUILD="$4"
 SKIP="${5:-}"
 
 # Must be absolute path as it is used in "conf", where we change directory.
-export WIND_BASE=$(realpath -m "$SRC/gccdist/WindRiver/vxworks-6.3")
+export WIND_BASE=$(realpath "$PREFIX/powerpc-wrs-vxworks/wind_base")
 
-export PATH="$(realpath -m "$PREFIX/bin"):$PATH"
+export PATH="$(realpath "$PREFIX/bin"):$PATH"
 
 [ -d "$DIST"   ] || mkdir "$DIST"   || exit
 [ -d "$SRC"    ] || mkdir "$SRC"    || exit
@@ -159,8 +159,6 @@ for d in gccdist binutils gcc libstdc++; do
 		fi
 	fi
 done
-
-rm -rf "$PREFIX"
 
 conf ()
 {
@@ -192,17 +190,19 @@ do_wrs_headers () {
 	download "gccdist.zip" \
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
-	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-regsPpc.patch || exit
-	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-unistd.patch || exit
-	patch -l -d "$SRC/gccdist" -p1 < wrs_headers-ioLib.patch  || exit
+	patch -l -d "$SRC/gccdist" -p1 < wrs_headers.patch || exit
+	mkdir -p "$WIND_BASE/target"
+	ln -s "$PREFIX/powerpc-wrs-vxworks/sys-include" "$WIND_BASE/target/h"
+	cp -R "$SRC/gccdist/WindRiver/vxworks-6.3/host" "$WIND_BASE/host"
 }
 run wrs_headers
 
 prep_gcc ()
 {
-	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc.patch || exit 1
-	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-4.6.2-vxworks-libstdcxx.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-$GCC_VERSION.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-$GCC_VERSION-vxworks-libstdcxx.patch || exit 1
 	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
+	patch -l -d "$SRC/gccdist/WindRiver/vxworks-6.3/target/h" -p1 < wrs_headers-gcc_build.patch || exit 1
 	#( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
 }
 
@@ -213,8 +213,7 @@ conf_gcc ()
 	    --target=powerpc-wrs-vxworks \
 	    --with-gnu-as \
 	    --with-gnu-ld \
-	    --with-headers="$WIND_BASE/target/h" \
-            --with-headers="$WIND_BASE/target/h/wrn/coreip" \
+	    --with-headers="$SRC/gccdist/WindRiver/vxworks-6.3/target/h" \
 	    --disable-shared \
 	    --disable-libssp \
 	    --disable-multilib \
@@ -247,8 +246,17 @@ do_gcc () {
 	ln -s "$SRC/mpc-$MPC_VERSION"   "$SRC/gcc-$GCC_VERSION/mpc"
 
 	prep_gcc
+	export C_INCLUDE_PATH="$SRC/gcc-$GCC_VERSION/mpfr/src"
+	export LD_LIBRARY_PATH="$BUILD/gcc/mpfr/src/.libs"
+	export LIBRARY_PATH="$LD_LIBRARY_PATH"
 	conf gcc
 	make_or_die gcc
+	patch -R -l -d "$WIND_BASE/target/h" -p1 < wrs_headers-gcc_build.patch || exit 1
 }
 run gcc
 
+do_custom_scripts () {
+	cp munch.sh "$WIND_BASE"
+	cp strip_syms.sh "$WIND_BASE" 
+}
+run custom_scripts

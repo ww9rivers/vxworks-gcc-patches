@@ -1,0 +1,86 @@
+diff -durpN a/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h b/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h
+--- a/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h	2012-04-20 10:57:45.627125802 -0400
++++ b/WindRiver/vxworks-6.3/target/h/arch/ppc/regsPpc.h	2012-04-20 10:53:53.511131218 -0400
+@@ -24,6 +24,9 @@ xxxxxxxxxxx,yao  written.
+ extern "C" {
+ #endif
+ 
++/* Need obsolete types */
++#include "types.h"
++
+ #define GREG_NUM	32	/* has 32 32/64-bit data registers */
+ 
+ #ifndef	_ASMLANGUAGE
+diff -durpN a/WindRiver/vxworks-6.3/target/h/ioLib.h b/WindRiver/vxworks-6.3/target/h/ioLib.h
+--- a/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-04-20 10:57:45.919125792 -0400
++++ b/WindRiver/vxworks-6.3/target/h/ioLib.h	2012-04-20 10:53:53.743131211 -0400
+@@ -392,8 +392,8 @@ extern char *	getwd (char * pathname);
+ extern int	open (const char *, int, int);
+ extern int	creat (const char *, int);
+ extern int	read (int, char *, size_t);
+-extern int	write (int, char *, size_t);
+-extern int 	ioctl (int fd, int function, int arg);
++extern int	write (int, const char *, size_t);
++extern int 	ioctl (int, int, void *);
+ extern STATUS	close (int);
+ extern STATUS	remove (const char *);
+ extern BOOL	isatty (int fd);
+diff -durpN a/WindRiver/vxworks-6.3/target/h/stdint.h b/WindRiver/vxworks-6.3/target/h/stdint.h
+--- a/WindRiver/vxworks-6.3/target/h/stdint.h	2012-04-20 10:57:46.167125785 -0400
++++ b/WindRiver/vxworks-6.3/target/h/stdint.h	2012-04-20 10:53:54.075131205 -0400
+@@ -1,4 +1,28 @@
+ #include <types/vxTypes.h>
+ 
+-typedef int intptr_t;
+-typedef unsigned long uintptr_t;
++typedef int32_t intptr_t;
++typedef uint32_t uintptr_t;
++
++typedef int64_t intmax_t;
++typedef uint64_t uintmax_t;
++
++typedef int8_t int_least8_t;
++typedef int16_t int_least16_t;
++typedef int32_t int_least32_t;
++typedef int64_t int_least64_t;
++
++typedef uint8_t uint_least8_t;
++typedef uint16_t uint_least16_t;
++typedef uint32_t uint_least32_t;
++typedef uint64_t uint_least64_t;
++
++typedef int8_t int_fast8_t;
++typedef int int_fast16_t;
++typedef int32_t int_fast32_t;
++typedef int64_t int_fast64_t;
++
++typedef uint8_t uint_fast8_t;
++typedef unsigned int uint_fast16_t;
++typedef uint32_t uint_fast32_t;
++typedef uint64_t uint_fast64_t;
++
+diff -durpN a/WindRiver/vxworks-6.3/target/h/unistd.h b/WindRiver/vxworks-6.3/target/h/unistd.h
+--- a/WindRiver/vxworks-6.3/target/h/unistd.h	2012-04-20 10:57:46.259125785 -0400
++++ b/WindRiver/vxworks-6.3/target/h/unistd.h	2012-04-20 10:53:54.123131203 -0400
+@@ -46,6 +46,7 @@ extern "C" {
+ #endif
+ 
+ #include <vxWorks.h>
++#include <ioLib.h>  /* for read/write */
+ 
+ #ifndef SEEK_SET
+ #define SEEK_SET           0       /* absolute offset, was L_SET */
+diff --git a/WindRiver/vxworks-6.3/target/h/assert.h b/WindRiver/vxworks-6.3/target/h/assert.h
+--- a/WindRiver/vxworks-6.3/target/h/assert.h
++++ b/WindRiver/vxworks-6.3/target/h/assert.h
+@@ -34,8 +34,8 @@ extern void __assert ();
+ 
+ #define assert(test) ((void) \
+ 		      ((test) ? ((void) 0) : \
+-		       __assert("Assertion failed: "#test", file " 	\
+-                                __FILE__ ", line "_ASSERT_STR(__LINE__)"\n")))
++		       __assert("Assertion failed: " #test ", file " 	\
++                                __FILE__ ", line " _ASSERT_STR(__LINE__) "\n")))
+ #endif	/* NDEBUG */
+ 
+ #ifdef __cplusplus
