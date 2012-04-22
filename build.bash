@@ -131,22 +131,30 @@ download()
 [ -e build.bash ] || cd $(dirname $0)
 [ -e build.bash ] || die "Current working directory must be source directory"
 
-[ $# -eq 4 ] || [ $# -eq 5 ] || die "usage: build.bash PREFIX DIST SRC BUILD [SKIPS]"
-PREFIX="$(realpath "$1")" # need an absolute here.
+RUNDIR=$(dirname "$0")
+
+[ $# -gt 3 ] || die "usage: build.bash PREFIX DIST SRC BUILD [SKIPS]"
+PREFIX="$1" # need an absolute here.
 DIST="$2"
-SRC="$(realpath "$3")"
+SRC="$3" # need an absolute here
 BUILD="$4"
 SKIP="${5:-}"
+WIND_BASE="$PREFIX/powerpc-wrs-vxworks/wind_base"
+
+mkdir -p $DIST
+mkdir -p $SRC
+mkdir -p $PREFIX
+mkdir -p $BUILD
+mkdir -p $WIND_BASE
+mkdir -p $PREFIX/bin
 
 # Must be absolute path as it is used in "conf", where we change directory.
-export WIND_BASE=$(realpath "$PREFIX/powerpc-wrs-vxworks/wind_base")
+export WIND_BASE=$(realpath "$WIND_BASE")
+PREFIX=$(realpath "$PREFIX")
+SRC=$(realpath "$SRC")
 
 export PATH="$(realpath "$PREFIX/bin"):$PATH"
 
-[ -d "$DIST"   ] || mkdir "$DIST"   || exit
-[ -d "$SRC"    ] || mkdir "$SRC"    || exit
-[ -d "$PREFIX" ] || mkdir "$PREFIX" || exit
-[ -d "$BUILD"  ] || mkdir "$BUILD"  || exit
 for d in gccdist binutils gcc libstdc++; do
 	if ! skip_has "$d"; then
 		df="$BUILD/$d"
