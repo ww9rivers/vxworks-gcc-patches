@@ -200,7 +200,7 @@ do_wrs_headers () {
 	extract gccdist.zip
 	patch -l -d "$SRC/gccdist" -p1 < wrs_headers.patch || exit
 	mkdir -p "$WIND_BASE/target"
-	ln -s "$PREFIX/powerpc-wrs-vxworks/sys-include" "$WIND_BASE/target/h"
+	ln -s "../../sys-include" "$WIND_BASE/target/h"
 	cp -R "$SRC/gccdist/WindRiver/vxworks-6.3/host" "$WIND_BASE/host"
 }
 run wrs_headers

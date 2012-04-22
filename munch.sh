@@ -1,5 +1,5 @@
 #!/bin/bash
-TCL_SCRIPT="`dirname "$0"`/wind_base/host/resource/hutils/tcl/munch.tcl"
+TCL_SCRIPT="`dirname "$0"`/host/resource/hutils/tcl/munch.tcl"
 NM_EXE=$1
 OUTPUT_FILE=$2
 shift 2
