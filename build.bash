@@ -226,7 +226,7 @@ conf_gcc ()
 	    --disable-libssp \
 	    --disable-multilib \
 	    --with-float=hard \
-	    --enable-languages=c,c++ \
+	    --enable-languages=c,c++,go \
 	    --enable-threads=vxworks \
 	    --without-gconv \
 	    --disable-libgomp \
