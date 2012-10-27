@@ -2,7 +2,7 @@
 
 # BEGIN CONFIGURATION
 BINUTILS_VERSION=2.22
-GCC_VERSION=4.7.0
+GCC_VERSION=4.7.2
 MPFR_VERSION=3.1.1
 GMP_VERSION=5.0.4
 MPC_VERSION=0.9
@@ -240,7 +240,7 @@ do_gcc () {
 		"http://ftp.gnu.org/gnu/gcc/gcc-$GCC_VERSION/gcc-$GCC_VERSION.tar.bz2"
 	extract "gcc-$GCC_VERSION.tar.bz2"
 
-	OLD_DIRECTORY=$(pwd)
+	local OLD_DIRECTORY=$(pwd)
 	cd $SRC/gcc-$GCC_VERSION
 	./contrib/download_prerequisites
 	cd $OLD_DIRECTORY

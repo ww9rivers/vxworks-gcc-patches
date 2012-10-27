@@ -1,0 +1,27 @@
+diff -durp -x '*~' a/gcc/gcov-io.c b/gcc/gcov-io.c
+--- a/gcc/gcov-io.c	2011-04-06 11:05:18.000000000 -0500
++++ b/gcc/gcov-io.c	2012-01-15 21:27:41.407688488 -0500
+@@ -92,7 +92,11 @@ gcov_open (const char *name, int mode)
+     {
+       /* Read-only mode - acquire a read-lock.  */
+       s_flock.l_type = F_RDLCK;
++#ifdef __VXWORKS__
++      fd = open (name, O_RDONLY, 0666);
++#else
+       fd = open (name, O_RDONLY);
++#endif
+     }
+   else
+     {
+diff -durp -x '*~' a/libgcc/libgcov.c b/libgcc/libgcov.c
+--- a/libgcc/libgcov.c	2011-01-04 13:05:06.000000000 -0500
++++ b/libgcc/libgcov.c	2012-01-15 17:54:11.566928799 -0500
+@@ -119,7 +119,7 @@ create_file_directory (char *filename)
+ 
+         /* Try to make directory if it doesn't already exist.  */
+         if (access (filename, F_OK) == -1
+-#ifdef TARGET_POSIX_IO
++#if defined(TARGET_POSIX_IO) && !defined(__VXWORKS__)
+             && mkdir (filename, 0755) == -1
+ #else
+             && mkdir (filename) == -1
