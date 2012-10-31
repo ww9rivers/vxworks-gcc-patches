@@ -1,0 +1,25 @@
+t a/fixincludes/inclhack.def b/fixincludes/inclhack.def
+index 54a8b8d..a258f10 100644
+--- a/fixincludes/inclhack.def
++++ b/fixincludes/inclhack.def
+@@ -4473,6 +4473,20 @@ fix = {
+     "# define\t__INCstath <sys/stat.h>";
+ };
+ 
++/*
++ *  Make it so VxWorks does not include gcc/regs.h accidentally
++ */
++fix = {
++	hackname	= vxworks_regs;
++	mach		= "*-*-vxworks*";
++	
++	select		= "#[\t ]*include[\t ]+<regs.h>";
++	c_fix		= format;
++	c_fix_arg	= "#include <arch/../regs.h>";
++	
++	test_text	= "#include <regs.h>\n";
++};
++
+ 
+ /*
+  *  Another bad dependency in VxWorks 5.2 <time.h>.

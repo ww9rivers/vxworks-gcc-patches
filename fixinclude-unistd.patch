@@ -1,0 +1,37 @@
+t a/fixincludes/inclhack.def b/fixincludes/inclhack.def
+index a7e49cd..54a8b8d 100644
+--- a/fixincludes/inclhack.def
++++ b/fixincludes/inclhack.def
+@@ -438,6 +438,32 @@ fix = {
+ 	_EndOfHeader_;
+ };
+ 
++/*
++ *  This hack makes makes unistd.h more POSIX-compliant on VxWorks
++ */
++fix = {
++	hackname	= AAB_vxworks_unistd;
++	files	   = unistd.h;
++	mach		= "*-*-vxworks*";
++	
++	replace		= <<- _EndOfHeader_
++	#ifndef _UNISTD_H
++	#define _UNISTD_H
++	#include_next <unistd.h>
++	#include <ioLib.h>
++	#ifndef STDIN_FILENO
++	#define STDIN_FILENO 0
++	#endif
++	#ifndef STDOUT_FILENO
++	#define STDOUT_FILENO 1
++	#endif
++	#ifndef STDERR_FILENO
++	#define STDERR_FILENO 2
++	#endif
++	#endif /* _UNISTD_H */
++	_EndOfHeader_;
++};
++
+ 
+ /*
+  * complex.h on AIX 5 and AIX 6 define _Complex_I and I in terms of __I,

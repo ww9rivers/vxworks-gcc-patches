@@ -1,0 +1,69 @@
+t a/fixincludes/mkfixinc.sh b/fixincludes/mkfixinc.sh
+index 89e8ab7..6653fed 100755
+--- a/fixincludes/mkfixinc.sh
++++ b/fixincludes/mkfixinc.sh
+@@ -15,7 +15,6 @@ case $machine in
+     i?86-*-mingw32* | \
+     x86_64-*-mingw32* | \
+     i?86-*-interix* | \
+-    *-*-vxworks* | \
+     powerpc-*-eabisim* | \
+     powerpc-*-eabi*    | \
+     powerpc-*-rtems*   | \
+diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+index 887a56e..9f0e78e 100644
+--- a/gcc/Makefile.in
++++ b/gcc/Makefile.in
+@@ -245,6 +245,9 @@ LINKER_FLAGS = $(CFLAGS)
+ endif
+ endif
+ 
++# Whether or not to run the machine_name fixincludes fix
++SKIP_MACHINE_NAME_FIX = @skip_machine_name_fix@
++
+ # -------------------------------------------
+ # Programs which operate on the build machine
+ # -------------------------------------------
+@@ -4131,10 +4134,14 @@ install-gcc-tooldir:
+ 
+ macro_list: s-macro_list; @true
+ s-macro_list : $(GCC_PASSES)
+-	echo | $(GCC_FOR_TARGET) -E -dM - | \
+-	  sed -n -e 's/^#define \([^_][a-zA-Z0-9_]*\).*/\1/p' \
+-		 -e 's/^#define \(_[^_A-Z][a-zA-Z0-9_]*\).*/\1/p' | \
+-	  sort -u > tmp-macro_list
++	@if test "$(SKIP_MACHINE_NAME_FIX)" != "yes" ; then \
++		echo | $(GCC_FOR_TARGET) -E -dM - | \
++			sed -n -e 's/^#define \([^_][a-zA-Z0-9_]*\).*/\1/p' \
++				-e 's/^#define \(_[^_A-Z][a-zA-Z0-9_]*\).*/\1/p' | \
++			sort -u > tmp-macro_list ; \
++	else \
++		echo > tmp-macro_list ; \
++	fi
+ 	$(SHELL) $(srcdir)/../move-if-change tmp-macro_list macro_list
+ 	$(STAMP) s-macro_list
+ 
+diff --git a/gcc/configure.ac b/gcc/configure.ac
+index 22dab55..aebb351 100644
+--- a/gcc/configure.ac
++++ b/gcc/configure.ac
+@@ -5142,6 +5142,20 @@ if test x"${LINKER_HASH_STYLE}" != x; then
+                                          [The linker hash style])
+ fi
+ 
++# Check whether to enable the fixincludes machine_name hack on this platform
++case "${target}" in
++    *-*-vxworks*)
++        skip_machine_name_fix="yes"
++        ;;
++    *)
++        # Note that some platforms have fixincludes disabled by default so
++        # this will make no difference
++        skip_machine_name_fix="no"
++        ;;
++esac
++AC_SUBST(skip_machine_name_fix)
++
++
+ # Configure the subdirectories
+ # AC_CONFIG_SUBDIRS($subdirs)

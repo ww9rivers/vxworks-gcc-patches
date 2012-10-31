@@ -1,0 +1,28 @@
+t a/fixincludes/inclhack.def b/fixincludes/inclhack.def
+index 7863dbe..063158c 100644
+--- a/fixincludes/inclhack.def
++++ b/fixincludes/inclhack.def
+@@ -4530,6 +4530,23 @@ fix = {
+                 "#define VOIDFUNCPTR (void(*)())";
+ };
+ 
++/*
++ *  This hack makes write const-correct on VxWorks
++ */
++fix = {
++	hackname	= vxworks_write_const;
++	files		= ioLib.h;
++	mach		= "*-*-vxworks*";
++
++	c_fix		= format;
++	c_fix_arg	= "extern int  write (int, const char*, size_t);";
++	c_fix_arg	= "extern[\t ]+int[\t ]+write[\t ]*\("
++		"[\t ]*int[\t ]*,"
++		"[\t ]*char[\t ]*\*[\t ]*,"
++		"[\t ]*size_t[\t ]*\)[\t ]*;";
++	
++	test_text	= "extern int write ( int , char * , size_t ) ;";
++};
+ 
+ /*
+  *  There are several name conflicts with C++ reserved words in X11 header

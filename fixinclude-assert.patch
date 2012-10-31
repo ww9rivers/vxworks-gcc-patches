@@ -1,0 +1,51 @@
+t a/fixincludes/inclhack.def b/fixincludes/inclhack.def
+index 8a26f28..d66b1cb 100644
+--- a/fixincludes/inclhack.def
++++ b/fixincludes/inclhack.def
+@@ -354,6 +354,46 @@ fix = {
+ 	_EndOfHeader_;
+ };
+ 
++/*
++ * Fix assert.h on VxWorks:
++ */
++fix = {
++	hackname	= AAB_vxworks_assert;
++	files		= assert.h;
++	mach		= "*-*-vxworks*";
++	
++	replace		= <<- _EndOfHeader_
++	#ifndef _ASSERT_H
++	#define _ASSERT_H
++
++	#ifdef assert
++	#undef assert
++	#endif
++
++	#if defined(__STDC__) || defined(__cplusplus)
++	extern void __assert (const char*);
++	#else
++	extern void __assert ();
++	#endif
++
++	#ifdef NDEBUG
++	#define assert(ign) ((void)0)
++	#else
++
++	#define ASSERT_STRINGIFY(str) ASSERT_STRINGIFY_HELPER(str)
++	#define ASSERT_STRINGIFY_HELPER(str) #str
++
++	#define assert(test) ((void) \
++		((test) ? ((void)0) : \
++		__assert("Assertion failed: " ASSERT_STRINGIFY(test) ", file " \
++		__FILE__ ", line " ASSERT_STRINGIFY(__LINE__) "\n")))
++
++	#endif
++
++	#endif
++	_EndOfHeader_;
++};
++
+ 
+ /*
+  * complex.h on AIX 5 and AIX 6 define _Complex_I and I in terms of __I,

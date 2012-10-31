@@ -1,0 +1,55 @@
+t a/fixincludes/inclhack.def b/fixincludes/inclhack.def
+index d66b1cb..a7e49cd 100644
+--- a/fixincludes/inclhack.def
++++ b/fixincludes/inclhack.def
+@@ -396,6 +396,50 @@ fix = {
+ 
+ 
+ /*
++ * Make VxWorks stdint.h a bit more compliant - add typedefs
++ */
++fix = {
++	hackname	= AAB_vxworks_stdint;
++	files		= stdint.h;
++	mach		= "*-*-vxworks*";
++	
++	replace		= <<- _EndOfHeader_
++	#ifndef _STDINT_H
++	#define _STDINT_H
++	/* get int*_t, uint*_t */
++	#include <types/vxTypes.h>
++
++	typedef long intptr_t;
++	typedef unsigned long uintptr_t;
++
++	typedef int64_t intmax_t;
++	typedef uint64_t uintmax_t;
++
++	typedef int8_t int_least8_t;
++	typedef int16_t int_least16_t;
++	typedef int32_t int_least32_t;
++	typedef int64_t int_least64_t;
++
++	typedef uint8_t uint_least8_t;
++	typedef uint16_t uint_least16_t;
++	typedef uint32_t uint_least32_t;
++	typedef uint64_t uint_least64_t;
++
++	typedef int8_t int_fast8_t;
++	typedef int int_fast16_t;
++	typedef int32_t int_fast32_t;
++	typedef int64_t int_fast64_t;
++
++	typedef uint8_t uint_fast8_t;
++	typedef unsigned int uint_fast16_t;
++	typedef uint32_t uint_fast32_t;
++	typedef uint64_t uint_fast64_t;
++	#endif
++	_EndOfHeader_;
++};
++
++
++/*
+  * complex.h on AIX 5 and AIX 6 define _Complex_I and I in terms of __I,
+  * which only is provided by AIX xlc C99.
+  */

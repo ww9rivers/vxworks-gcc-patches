@@ -198,20 +198,28 @@ do_wrs_headers () {
 	download "gccdist.zip" \
 		"ftp://ftp.ni.com/pub/devzone/tut/updated_vxworks63gccdist.zip"
 	extract gccdist.zip
-	patch -l -d "$SRC/gccdist" -p1 < wrs_headers.patch || exit
 	mkdir -p "$WIND_BASE/target"
-	ln -s "../../sys-include" "$WIND_BASE/target/h"
+	mkdir -p "$PREFIX/powerpc-wrs-vxworks/sys-include"
+	cp -r "$SRC/gccdist/WindRiver/vxworks-6.3/target/h/*" "$PREFIX/powerpc-wrs-vxworks/sys-include"
+	ln -s $PREFIX/powerpc-wrs-vxworks/sys-include/wrn/coreip $PREFIX/powerpc-wrs-vxworks/include
 	cp -R "$SRC/gccdist/WindRiver/vxworks-6.3/host" "$WIND_BASE/host"
 }
 run wrs_headers
 
 prep_gcc ()
 {
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < fixinclude-skip-machine-name.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < fixinclude-assert.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < fixinclude-stdint.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < fixinclude-unistd.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < fixinclude-regs.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < fixinclude-ioctl.patch || exit 1
+	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < fixinclude-write.patch || exit 1
 	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-$GCC_VERSION.patch || exit 1
 	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-$GCC_VERSION-vxworks-libstdcxx.patch || exit 1
 	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
-	patch -l -d "$SRC/gccdist/WindRiver/vxworks-6.3/target/h" -p1 < wrs_headers-gcc_build.patch || exit 1
 	#( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
+	cd $SRC/gcc-$GCC_VERSION/fixincludes && ./genfixes || exit 1
 }
 
 conf_gcc ()
@@ -221,7 +229,6 @@ conf_gcc ()
 	    --target=powerpc-wrs-vxworks \
 	    --with-gnu-as \
 	    --with-gnu-ld \
-	    --with-headers="$SRC/gccdist/WindRiver/vxworks-6.3/target/h" \
 	    --disable-shared \
 	    --disable-libssp \
 	    --disable-multilib \
@@ -251,7 +258,6 @@ do_gcc () {
 	export LIBRARY_PATH="$LD_LIBRARY_PATH"
 	conf gcc
 	make_or_die gcc
-	patch -R -l -d "$WIND_BASE/target/h" -p1 < wrs_headers-gcc_build.patch || exit 1
 }
 run gcc
 
