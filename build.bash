@@ -200,7 +200,7 @@ do_wrs_headers () {
 	extract gccdist.zip
 	mkdir -p "$WIND_BASE/target"
 	mkdir -p "$PREFIX/powerpc-wrs-vxworks/sys-include"
-	cp -r "$SRC/gccdist/WindRiver/vxworks-6.3/target/h/*" "$PREFIX/powerpc-wrs-vxworks/sys-include"
+	mv $SRC/gccdist/WindRiver/vxworks-6.3/target/h $PREFIX/powerpc-wrs-vxworks/sys-include
 	ln -s $PREFIX/powerpc-wrs-vxworks/sys-include/wrn/coreip $PREFIX/powerpc-wrs-vxworks/include
 	cp -R "$SRC/gccdist/WindRiver/vxworks-6.3/host" "$WIND_BASE/host"
 }
@@ -219,7 +219,6 @@ prep_gcc ()
 	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-$GCC_VERSION-vxworks-libstdcxx.patch || exit 1
 	patch -l -d "$SRC/gcc-$GCC_VERSION" -p1 < gcc-vxworks-libstdcxx-nominmax.patch || exit 1
 	#( cd "$SRC/gcc-$GCC_VERSION" && ./contrib/download_prerequisites ) || exit
-	cd $SRC/gcc-$GCC_VERSION/fixincludes && ./genfixes || exit 1
 }
 
 conf_gcc ()
@@ -227,6 +226,7 @@ conf_gcc ()
 	"$SRC/gcc-$GCC_VERSION/configure" \
 	    --prefix="$PREFIX" \
 	    --target=powerpc-wrs-vxworks \
+	    --with-headers="$PREFIX/powerpc-wrs-vxworks/sys-include"
 	    --with-gnu-as \
 	    --with-gnu-ld \
 	    --disable-shared \
@@ -240,6 +240,7 @@ conf_gcc ()
 	    --disable-nls \
 	    --disable-libmudflap \
 	    --with-cpu-PPC603
+	cd "$SRC/gcc-$GCC_VERSION/fixincludes" && ./genfixes || exit 1
 }
 
 do_gcc () {
